@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.engineerskasa.safetapp.R;
 import com.engineerskasa.safetapp.Utility.Tools;
@@ -23,7 +25,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Verify Phone Number");
+        getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Tools.setSystemBarColor(this, android.R.color.white);
         Tools.setSystemBarLight(this);
@@ -35,5 +37,10 @@ public class VerifyPhoneActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void LaunchActivity(View view) {
+        startActivity(new Intent(VerifyPhoneActivity.this, MainActivity.class));
     }
 }
