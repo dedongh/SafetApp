@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/parent_layout"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/white"
     android:fitsSystemWindows="true"
@@ -68,6 +69,7 @@
 
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/smsCode1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -84,7 +86,7 @@
                     android:layout_width="5dp"
                     android:layout_height="0dp" />
 
-                <com.google.android.material.textfield.TextInputEditText
+               <!-- <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -95,13 +97,13 @@
                     android:singleLine="true"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textColor="@color/grey_90"
-                    android:textStyle="bold" />
+                    android:textStyle="bold" />-->
 
                 <View
                     android:layout_width="5dp"
                     android:layout_height="0dp" />
 
-                <com.google.android.material.textfield.TextInputEditText
+               <!-- <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -112,13 +114,13 @@
                     android:singleLine="true"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textColor="@color/grey_90"
-                    android:textStyle="bold" />
+                    android:textStyle="bold" />-->
 
                 <View
                     android:layout_width="5dp"
                     android:layout_height="0dp" />
 
-                <com.google.android.material.textfield.TextInputEditText
+               <!-- <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -129,11 +131,12 @@
                     android:singleLine="true"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                     android:textColor="@color/grey_90"
-                    android:textStyle="bold" />
+                    android:textStyle="bold" />-->
 
             </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSignin"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

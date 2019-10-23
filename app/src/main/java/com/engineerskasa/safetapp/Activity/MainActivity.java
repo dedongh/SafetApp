@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,8 +12,11 @@ import android.widget.Toast;
 
 import com.engineerskasa.safetapp.R;
 import com.engineerskasa.safetapp.Utility.Tools;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         /*Tools.setSystemBarColor(this, android.R.color.white);
         Tools.setSystemBarLight(this);*/
+
+        auth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -36,8 +42,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        /*if (item.getItemId() == R.id.action_settings) {
-        }*/
+        if (item.getItemId() == R.id.action_signout) {
+            auth.signOut();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
         Toast.makeText(getApplicationContext(), item.getTitle() + " clicked", Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
     }

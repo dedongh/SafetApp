@@ -58,6 +58,7 @@
                 android:layout_height="0dp" />
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Phone Number"
@@ -76,10 +77,10 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnContinue"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_rounded_red"
-            android:onClick="verifyPhone"
             android:text="CONTINUE"
             android:textColor="@android:color/white" />
 
