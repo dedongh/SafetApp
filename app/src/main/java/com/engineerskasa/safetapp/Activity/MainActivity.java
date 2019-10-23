@@ -1,8 +1,10 @@
-package com.engineerskasa.safetapp;
+package com.engineerskasa.safetapp.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.engineerskasa.safetapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
