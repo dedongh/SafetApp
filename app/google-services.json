@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "246392268885",
+    "firebase_url": "https://safetapp-69832.firebaseio.com",
+    "project_id": "safetapp-69832",
+    "storage_bucket": "safetapp-69832.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246392268885:android:5fd04383feaf6888558cdc",
+        "android_client_info": {
+          "package_name": "com.engineerskasa.safetapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246392268885-8643m007k95ovhfu1vu29nat65edpotc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.engineerskasa.safetapp",
+            "certificate_hash": "70d404442d210dde265df72f960d6686327773a6"
+          }
+        },
+        {
+          "client_id": "246392268885-3d7p0sr9bhan3ef4efpdki7k65vaqcl7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm8jt8qFYNY7K6jzHXv-2XFcapaeFC_Tk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "246392268885-3d7p0sr9bhan3ef4efpdki7k65vaqcl7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
