@@ -20,8 +20,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_location);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(null);
+        getSupportActionBar().setTitle("SafetApp");
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         /*Tools.setSystemBarColor(this, android.R.color.white);
         Tools.setSystemBarLight(this);*/
