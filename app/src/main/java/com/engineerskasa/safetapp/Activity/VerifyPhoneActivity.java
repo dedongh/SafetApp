@@ -124,6 +124,7 @@ public class VerifyPhoneActivity extends AppCompatActivity {
             if (code != null) {
                 textCode.setText(code);
                 verifyVerificationCode(code);
+                //signInWithPhoneAuthCredential(phoneAuthCredential);
             }
         }
 
@@ -158,7 +159,5 @@ public class VerifyPhoneActivity extends AppCompatActivity {
     }
 
 
-    public void LaunchActivity(View view) {
-        startActivity(new Intent(VerifyPhoneActivity.this, MainActivity.class));
-    }
+
 }
