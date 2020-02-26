@@ -3,16 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.engineerskasa.safetapp">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/ic_shopping_basket"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/logo"
+        android:roundIcon="@drawable/ic_shopping_basket"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Activity.VerifyPhoneActivity"></activity>
+        <activity android:name=".Activity.AvailableShopsActivity"></activity>
+        <activity android:name=".Activity.ShoppingListActivity" />
+        <activity android:name=".Activity.AddNewItemActivity" />
+        <activity android:name=".Activity.AddCategoryActivity" />
+        <activity android:name=".Activity.DummyActivity" />
+        <activity android:name=".Activity.VerifyPhoneActivity" />
         <activity android:name=".Activity.MainActivity" />
         <activity android:name=".Activity.LoginActivity">
             <intent-filter>
