@@ -15,6 +15,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            android:elevation="8dp"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
@@ -59,6 +60,28 @@
                     android:backgroundTint="@color/colorHeading"
                     android:inputType="text"
                     android:id="@+id/txt_item_name"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Category"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginBottom="4dp"/>
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:backgroundTint="@color/colorHeading"
+                        android:id="@+id/spn_category_name"/>
 
                 </LinearLayout>
 
@@ -140,6 +163,28 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="Units"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginBottom="4dp"/>
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:backgroundTint="@color/colorHeading"
+                        android:id="@+id/spn_units"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="Mode of preservation"
                         android:textColor="@color/colorPrimary"
                         android:layout_marginBottom="4dp"/>
@@ -171,6 +216,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
+                        android:focusable="false"
                         android:backgroundTint="@color/colorHeading"
                         android:inputType="text"
                         android:id="@+id/txt_exp_date"/>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="item_units">
+        <item>unit</item>
+        <item>of them</item>
+        <item>boxes</item>
+        <item>cans</item>
+        <item>g</item>
+        <item>kg</item>
+        <item>lbs</item>
+        <item>l</item>
+        <item>ml</item>
+        <item>oz</item>
+        <item>%</item>
+        <item>piece</item>
+        <item>bottle</item>
+        <item>jar</item>
+        <item>dozen</item>
+        <item>gallon</item>
+        <item>cup</item>
+        <item>bags</item>
+        <item>pack</item>
+        <item>tube</item>
+    </string-array>
+</resources>

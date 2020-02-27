@@ -10,6 +10,9 @@ import androidx.annotation.ColorRes;
 
 import com.engineerskasa.safetapp.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Tools {
 
     public static void setSystemBarLight(Activity act) {
@@ -29,4 +32,38 @@ public class Tools {
             window.setStatusBarColor(act.getResources().getColor(color));
         }
     }
+
+    public static String getFormattedDateSimple(Long dateTime) {
+        SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        return newFormat.format(new Date(dateTime));
+    }
+
+    public static String getSimpleFormattedDate(Long dateTime) {
+        SimpleDateFormat newFormat = new SimpleDateFormat("dd/M/yyyy");
+        return newFormat.format(new Date(dateTime));
+    }
+
+    public static String printDifference(Date startDate, Date endDate) {
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+
+        return String.valueOf(elapsedDays);
+    }
+
 }

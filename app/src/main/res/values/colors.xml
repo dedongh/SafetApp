@@ -24,4 +24,6 @@
 
     <color name="transparent">#00FFFFFF</color>
     <color name="blackTransparent">#51000000</color>
+
+    <color name="gray_text">#B6B6B6</color>
 </resources>
