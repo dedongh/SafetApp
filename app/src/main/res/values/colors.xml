@@ -10,7 +10,18 @@
     <color name="grey_90">#263238</color>
     <color name="grey_20">#cccccc</color>
 
+    <color name="colorBookTitle">#000000</color>
+
     <color name="green_A200">#69F0AE</color>
     <color name="green_A400">#00E676</color>
     <color name="green_A700">#00C853</color>
+
+    <color name="light_blue_400">#29B6F6</color>
+    <color name="light_blue_800">#0277BD</color>
+
+    <color name="colorHeading">#606E82</color>
+    <color name="tagline">#cacfd7</color>
+
+    <color name="transparent">#00FFFFFF</color>
+    <color name="blackTransparent">#51000000</color>
 </resources>

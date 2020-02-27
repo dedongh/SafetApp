@@ -8,6 +8,10 @@ public class CaterygoryObject {
     public CaterygoryObject() {
     }
 
+    public CaterygoryObject(String categoryTitle) {
+        this.categoryTitle = categoryTitle;
+    }
+
     public String getCategoryTitle() {
         return categoryTitle;
     }

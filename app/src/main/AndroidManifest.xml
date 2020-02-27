@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Activity.AvailableShopsActivity"></activity>
+        <activity android:name=".Activity.AboutToExpireActivity"></activity>
+        <activity android:name=".Activity.AvailableShopsActivity" />
         <activity android:name=".Activity.ShoppingListActivity" />
         <activity android:name=".Activity.AddNewItemActivity" />
         <activity android:name=".Activity.AddCategoryActivity" />
