@@ -5,24 +5,33 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.engineerskasa.safetapp.R;
 import com.engineerskasa.safetapp.Utility.Constants;
 import com.engineerskasa.safetapp.Utility.Tools;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.ParseException;
@@ -32,7 +41,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class AddNewItemActivity extends AppCompatActivity {
+public class AddNewItemActivity extends AppCompatActivity implements View.OnClickListener{
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -49,6 +58,12 @@ public class AddNewItemActivity extends AppCompatActivity {
     String[] units;
     ArrayList<String> categoryArray = new ArrayList<>();
 
+    private ImageButton add_category;
+    private RoundedImageView open_camera_sheet;
+
+    private BottomSheetBehavior mBehavior;
+    private BottomSheetDialog mBottomSheetDialog;
+    private View bottom_sheet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +92,15 @@ public class AddNewItemActivity extends AppCompatActivity {
         txt_mode_pres = (EditText)findViewById(R.id.txt_pres_mode);
         txt_exp_date = (EditText)findViewById(R.id.txt_exp_date);
         txt_unit_price = (EditText)findViewById(R.id.txt_unit_price);
+
+        add_category = (ImageButton) findViewById(R.id.add_cat);
+        open_camera_sheet = (RoundedImageView) findViewById(R.id.open_cam_sheet);
+
+        bottom_sheet = findViewById(R.id.bottom_sheet);
+        mBehavior = BottomSheetBehavior.from(bottom_sheet);
+
+        add_category.setOnClickListener(this);
+        open_camera_sheet.setOnClickListener(this);
 
         txt_exp_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,6 +215,47 @@ public class AddNewItemActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        if (v == add_category) {
+            startActivity(new Intent(AddNewItemActivity.this, AddCategoryActivity.class));
+        }
+        if (v == open_camera_sheet) {
+            if (mBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+
+            final View view = getLayoutInflater().inflate(R.layout.open_gallery_layout, null);
+
+            ((View) view.findViewById(R.id.open_camera)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(AddNewItemActivity.this, "Camera", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            ((View) view.findViewById(R.id.open_gallery)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(AddNewItemActivity.this, "Gallery", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            mBottomSheetDialog = new BottomSheetDialog(this);
+            mBottomSheetDialog.setContentView(view);
+            mBottomSheetDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            mBottomSheetDialog.show();
+            mBottomSheetDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    mBottomSheetDialog = null;
+                }
+            });
+        }
     }
 
     @Override
