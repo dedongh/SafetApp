@@ -28,13 +28,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Tools.setSystemBarColor(this, R.color.grey_5);
+        Tools.setSystemBarLight(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_add_shopping_cart);
+        toolbar.setNavigationIcon(R.drawable.grocery_icon);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Shelf Stacker");
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        /*Tools.setSystemBarColor(this, android.R.color.white);
-        Tools.setSystemBarLight(this);*/
 
         auth = FirebaseAuth.getInstance();
 
