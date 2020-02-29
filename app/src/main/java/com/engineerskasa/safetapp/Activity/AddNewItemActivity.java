@@ -125,6 +125,7 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
     ArrayAdapter<String> arrayUnitsAdapter;
 
     String selectedKey;
+    String imageURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,11 +252,8 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
                             String cat_name = categorySnapshot.child("categoryTitle").getValue(String.class);
                             categoryArray.add(cat_name);
                         }
-                        arrayCategoryAdapter = new ArrayAdapter<String>(
-                                getApplicationContext(), R.layout.network_spinner_layout, R.id.network_spn, categoryArray
-                        );
 
-                        spn_category.setAdapter(arrayCategoryAdapter);
+                        assign_spinner(categoryArray);
 
                     }
 
@@ -266,8 +264,7 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
                 });
 
          arrayUnitsAdapter = new ArrayAdapter<String>(
-                getApplicationContext(), R.layout.network_spinner_layout, R.id.network_spn, units
-        );
+                getApplicationContext(), R.layout.network_spinner_layout, R.id.network_spn, units);
 
         spn_units.setAdapter(arrayUnitsAdapter);
 
@@ -303,7 +300,7 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
                    .addValueEventListener(new ValueEventListener() {
                        @Override
                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                           String imageURL = dataSnapshot.child("item_image").getValue(String.class);
+                           imageURL = dataSnapshot.child("item_image").getValue(String.class);
                            txt_item_name.setText(dataSnapshot.child("itemName").getValue(String.class));
                            txt_notes.setText(dataSnapshot.child("description").getValue(String.class));
                            txt_units_threshold.setText(dataSnapshot.child("quantity_threshold").getValue(String.class));
@@ -313,8 +310,14 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
                            txt_unit_price.setText(dataSnapshot.child("unit_price").getValue(String.class));
 
                            String category = dataSnapshot.child("category").getValue(String.class);
+                           String units = dataSnapshot.child("unit").getValue(String.class);
+
+                           int unitsPos = arrayUnitsAdapter.getPosition(units);
+                           spn_units.setSelection(unitsPos);
+
                            int categoryPosition = arrayCategoryAdapter.getPosition(category);
                            spn_category.setSelection(categoryPosition);
+
                            if (!imageURL.isEmpty()) {
                                Glide.with(getApplicationContext()).load(imageURL)
                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -330,6 +333,13 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    private void assign_spinner(ArrayList<String> categoryArray) {
+        arrayCategoryAdapter = new ArrayAdapter<String>(
+                getApplicationContext(), R.layout.network_spinner_layout, R.id.network_spn, categoryArray);
+
+        spn_category.setAdapter(arrayCategoryAdapter);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -338,6 +348,67 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
         }
 
         if (v == btn_update) {
+            item_name = txt_item_name.getText().toString();
+            description = txt_notes.getText().toString();
+            minimum_units = txt_units_threshold.getText().toString();
+            quantity = txt_quantity.getText().toString();
+            unit_price = txt_unit_price.getText().toString();
+            mode_of_preservation = txt_mode_pres.getText().toString();
+            exp_date = txt_exp_date.getText().toString();
+
+            if (exp_notice.isChecked())
+                notify_me = "yes";
+            else
+                notify_me = "no";
+
+            if (TextUtils.isEmpty(item_name)) {
+                txt_item_name.setError("Please enter item name");
+                txt_item_name.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(minimum_units)) {
+                txt_units_threshold.setError("Please enter minimum threshold");
+                txt_units_threshold.requestFocus();
+                return;
+            }
+            if (TextUtils.isEmpty(quantity)) {
+                txt_quantity.setError("Please enter item quantity");
+                txt_quantity.requestFocus();
+                return;
+            }
+            PantryListObject object = new PantryListObject();
+            object.setItemName(item_name);
+            object.setCategory(category_name);
+            object.setDescription(description);
+            object.setQuantity_threshold(minimum_units);
+            object.setQuantity(quantity);
+            object.setUnit(units_selected);
+            object.setMode_of_preservation(mode_of_preservation);
+            object.setExpiration_date(exp_date);
+            object.setUnit_price(unit_price);
+            object.setExp_notice(notify_me);
+            object.setDays_left_to_expire(days_to_expire);
+            object.setItem_image(imageURL);
+            final android.app.AlertDialog waitingDialog = new SpotsDialog(this);
+            waitingDialog.show();
+            waitingDialog.setMessage("Updating Item");
+            user_items.child(user.getUid()).child(selectedKey)
+                    .setValue(object)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            waitingDialog.dismiss();
+                            Toast.makeText(AddNewItemActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    waitingDialog.dismiss();
+                    Toast.makeText(AddNewItemActivity.this, "Couldn't Update", Toast.LENGTH_SHORT).show();
+                    Log.e("ASDF", "onFailure: "+e.getMessage() );
+                }
+            });
+
         }
 
         if (v == open_camera_sheet) {
