@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.engineerskasa.safetapp.R;
@@ -17,11 +19,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth auth;
 
     private FabSpeedDial fabSpeedDial;
+
+    private LinearLayout open_my_kitchen, open_my_shopping_list, open_available_shops, open_recipe_page;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,16 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Shelf Stacker");
 
         auth = FirebaseAuth.getInstance();
+
+        open_my_kitchen = (LinearLayout) findViewById(R.id.open_my_kitchen);
+        open_my_shopping_list = (LinearLayout) findViewById(R.id.open_shopping_list);
+        open_available_shops = (LinearLayout) findViewById(R.id.open_available_shops);
+        open_recipe_page = (LinearLayout) findViewById(R.id.open_recipes);
+
+        open_my_kitchen.setOnClickListener(this);
+        open_my_shopping_list.setOnClickListener(this);
+        open_available_shops.setOnClickListener(this);
+        open_recipe_page.setOnClickListener(this);
 
         fabSpeedDial = (FabSpeedDial) findViewById(R.id.fabSpeed);
 
@@ -87,4 +101,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        if (v == open_my_kitchen) {
+            startActivity(new Intent(MainActivity.this, MyKitchenActivity.class));
+        }
+        if (v == open_my_shopping_list) {
+            startActivity(new Intent(MainActivity.this, ShoppingListActivity.class));
+        }
+        if (v == open_available_shops) {
+            startActivity(new Intent(MainActivity.this, AvailableShopsActivity.class));
+        }
+        if (v == open_recipe_page) {
+            startActivity(new Intent(MainActivity.this, RecipeActivity.class));
+        }
+    }
 }

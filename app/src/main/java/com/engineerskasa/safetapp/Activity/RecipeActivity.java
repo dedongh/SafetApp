@@ -13,7 +13,7 @@ import com.engineerskasa.safetapp.Utility.Constants;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class DummyActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity {
 
     EditText edt_title, edt_category, edt_quantity;
     Button btn_post;

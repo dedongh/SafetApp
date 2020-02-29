@@ -36,6 +36,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.engineerskasa.safetapp.Model.PantryListObject;
 import com.engineerskasa.safetapp.R;
 import com.engineerskasa.safetapp.Utility.Constants;
@@ -92,7 +94,7 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
     private EditText txt_item_name, txt_notes, txt_units_threshold, txt_quantity, txt_mode_pres,
     txt_exp_date, txt_unit_price;
     Spinner spn_category, spn_units;
-    Button btn_save;
+    Button btn_save, btn_update;
     CheckBox exp_notice;
     private String category_name, units_selected, exp_date, selected_date, days_to_expire,
             item_name, description, minimum_units, quantity, unit_price, notify_me, mode_of_preservation;
@@ -118,6 +120,11 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
     private boolean selected_camera = false;
 
     private String[] downloadURL = new String[1];
+
+    ArrayAdapter<String> arrayCategoryAdapter;
+    ArrayAdapter<String> arrayUnitsAdapter;
+
+    String selectedKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,10 +172,12 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
         mBehavior = BottomSheetBehavior.from(bottom_sheet);
 
         btn_save = (Button) findViewById(R.id.btn_save_item);
+        btn_update = (Button) findViewById(R.id.btn_update_item);
 
         add_category.setOnClickListener(this);
         open_camera_sheet.setOnClickListener(this);
         btn_save.setOnClickListener(this);
+        btn_update.setOnClickListener(this);
 
         txt_exp_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,11 +251,11 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
                             String cat_name = categorySnapshot.child("categoryTitle").getValue(String.class);
                             categoryArray.add(cat_name);
                         }
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                        arrayCategoryAdapter = new ArrayAdapter<String>(
                                 getApplicationContext(), R.layout.network_spinner_layout, R.id.network_spn, categoryArray
                         );
 
-                        spn_category.setAdapter(arrayAdapter);
+                        spn_category.setAdapter(arrayCategoryAdapter);
 
                     }
 
@@ -256,11 +265,11 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
                     }
                 });
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+         arrayUnitsAdapter = new ArrayAdapter<String>(
                 getApplicationContext(), R.layout.network_spinner_layout, R.id.network_spn, units
         );
 
-        spn_units.setAdapter(arrayAdapter);
+        spn_units.setAdapter(arrayUnitsAdapter);
 
         spn_units.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -285,6 +294,40 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
+
+        if (getIntent().getStringExtra(Constants.EDIT_ITEM_KEY) != null) {
+            btn_update.setVisibility(View.VISIBLE);
+            btn_save.setVisibility(View.GONE);
+            selectedKey = getIntent().getStringExtra(Constants.EDIT_ITEM_KEY);
+           user_items.child(user.getUid()).child(selectedKey)
+                   .addValueEventListener(new ValueEventListener() {
+                       @Override
+                       public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                           String imageURL = dataSnapshot.child("item_image").getValue(String.class);
+                           txt_item_name.setText(dataSnapshot.child("itemName").getValue(String.class));
+                           txt_notes.setText(dataSnapshot.child("description").getValue(String.class));
+                           txt_units_threshold.setText(dataSnapshot.child("quantity_threshold").getValue(String.class));
+                           txt_quantity.setText(dataSnapshot.child("quantity").getValue(String.class));
+                           txt_mode_pres.setText(dataSnapshot.child("mode_of_preservation").getValue(String.class));
+                           txt_exp_date.setText(dataSnapshot.child("expiration_date").getValue(String.class));
+                           txt_unit_price.setText(dataSnapshot.child("unit_price").getValue(String.class));
+
+                           String category = dataSnapshot.child("category").getValue(String.class);
+                           int categoryPosition = arrayCategoryAdapter.getPosition(category);
+                           spn_category.setSelection(categoryPosition);
+                           if (!imageURL.isEmpty()) {
+                               Glide.with(getApplicationContext()).load(imageURL)
+                                       .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                       .into(open_camera_sheet);
+                           }
+                       }
+
+                       @Override
+                       public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                       }
+                   });
+        }
     }
 
 
@@ -292,6 +335,9 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         if (v == add_category) {
             startActivity(new Intent(AddNewItemActivity.this, AddCategoryActivity.class));
+        }
+
+        if (v == btn_update) {
         }
 
         if (v == open_camera_sheet) {

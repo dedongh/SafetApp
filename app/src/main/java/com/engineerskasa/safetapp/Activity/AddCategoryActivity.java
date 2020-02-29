@@ -79,43 +79,22 @@ public class AddCategoryActivity extends AppCompatActivity {
 
         btn_save.setOnClickListener(v -> postCategory());
 
-        btn_update.setOnClickListener(new View.OnClickListener() {
+        btn_update.setOnClickListener(v -> databaseReference.child(Constants.CATEGORY).child(selectedKey)
+                .setValue(new CaterygoryObject(edt_category.getText().toString()))
+        .addOnSuccessListener(aVoid -> Toast.makeText(AddCategoryActivity.this, "Updated", Toast.LENGTH_SHORT).show()).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onClick(View v) {
-                databaseReference.child(Constants.CATEGORY).child(selectedKey)
-                        .setValue(new CaterygoryObject(edt_category.getText().toString()))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(AddCategoryActivity.this, "Updated", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AddCategoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(AddCategoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        });
-        btn_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        }));
+        btn_delete.setOnClickListener(v ->
                 databaseReference.child(Constants.CATEGORY).child(selectedKey)
-                       .removeValue()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                edt_category.getText().clear();
-                                Toast.makeText(AddCategoryActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(AddCategoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+               .removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    edt_category.getText().clear();
+                    Toast.makeText(AddCategoryActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e ->
+                        Toast.makeText(AddCategoryActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show()));
 
         displayComment();
     }
@@ -183,6 +162,11 @@ public class AddCategoryActivity extends AppCompatActivity {
                                 Log.e("CATKEYS", "onClick: ItemKey: "+ selectedKey );
 
                                 edt_category.setText(model.getCategoryTitle());
+                            }
+
+                            @Override
+                            public void onLongClick(View view, int position) {
+
                             }
                         });
                     }

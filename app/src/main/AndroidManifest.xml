@@ -10,7 +10,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -20,12 +22,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Activity.MyKitchenActivity"></activity>
         <activity android:name=".Activity.AboutToExpireActivity" />
         <activity android:name=".Activity.AvailableShopsActivity" />
         <activity android:name=".Activity.ShoppingListActivity" />
         <activity android:name=".Activity.AddNewItemActivity" />
         <activity android:name=".Activity.AddCategoryActivity" />
-        <activity android:name=".Activity.DummyActivity" />
+        <activity android:name=".Activity.RecipeActivity" />
         <activity android:name=".Activity.VerifyPhoneActivity" />
         <activity android:name=".Activity.MainActivity" />
         <activity android:name=".Activity.LoginActivity">
