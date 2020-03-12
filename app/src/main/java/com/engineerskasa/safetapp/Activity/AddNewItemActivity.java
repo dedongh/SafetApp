@@ -1,25 +1,15 @@
 package com.engineerskasa.safetapp.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,12 +19,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -55,7 +51,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -72,7 +67,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import dmax.dialog.SpotsDialog;
 
@@ -244,24 +238,7 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
         });
 
 
-        databaseReference.child(Constants.CATEGORY)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
-                            String cat_name = categorySnapshot.child("categoryTitle").getValue(String.class);
-                            categoryArray.add(cat_name);
-                        }
-
-                        assign_spinner(categoryArray);
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+        load_category();
 
          arrayUnitsAdapter = new ArrayAdapter<String>(
                 getApplicationContext(), R.layout.network_spinner_layout, R.id.network_spn, units);
@@ -280,17 +257,6 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        spn_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                category_name = categoryArray.get(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         if (getIntent().getStringExtra(Constants.EDIT_ITEM_KEY) != null) {
             btn_update.setVisibility(View.VISIBLE);
@@ -315,8 +281,10 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
                            int unitsPos = arrayUnitsAdapter.getPosition(units);
                            spn_units.setSelection(unitsPos);
 
-                           int categoryPosition = arrayCategoryAdapter.getPosition(category);
-                           spn_category.setSelection(categoryPosition);
+                           if (arrayCategoryAdapter != null) {
+                               int categoryPosition = arrayCategoryAdapter.getPosition(category);
+                               spn_category.setSelection(categoryPosition);
+                           }
 
                            if (!imageURL.isEmpty()) {
                                Glide.with(getApplicationContext()).load(imageURL)
@@ -333,11 +301,43 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void assign_spinner(ArrayList<String> categoryArray) {
-        arrayCategoryAdapter = new ArrayAdapter<String>(
-                getApplicationContext(), R.layout.network_spinner_layout, R.id.network_spn, categoryArray);
 
-        spn_category.setAdapter(arrayCategoryAdapter);
+    private void load_category() {
+        databaseReference.child(Constants.CATEGORY)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
+                            String cat_name = categorySnapshot.child("categoryTitle").getValue(String.class);
+                            categoryArray.add(cat_name);
+                        }
+
+                        //assign_spinner(categoryArray);
+                        arrayCategoryAdapter = new ArrayAdapter<String>(
+                                getApplicationContext(), R.layout.network_spinner_layout, R.id.network_spn, categoryArray);
+
+                        spn_category.setAdapter(arrayCategoryAdapter);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+        spn_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                category_name = categoryArray.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
 
