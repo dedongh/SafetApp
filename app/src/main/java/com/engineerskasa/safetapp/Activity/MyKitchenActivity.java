@@ -2,17 +2,24 @@ package com.engineerskasa.safetapp.Activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +33,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.engineerskasa.safetapp.Adapter.CategoryAdapter;
 import com.engineerskasa.safetapp.Adapter.PantryAdapter;
 import com.engineerskasa.safetapp.Interfaces.ItemClickListener;
 import com.engineerskasa.safetapp.Model.PantryListObject;
@@ -40,9 +46,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.internal.NavigationMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import io.github.yavski.fabspeeddial.FabSpeedDial;
@@ -50,7 +61,7 @@ import io.github.yavski.fabspeeddial.FabSpeedDial;
 public class MyKitchenActivity extends AppCompatActivity {
 
     FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference, user_items;
+    DatabaseReference databaseReference, user_items, shopping_list;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -64,6 +75,12 @@ public class MyKitchenActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
+    private ProgressBar progressBar;
+    private TextView no_pantry_text;
+
+    private ArrayList<String> userListArray = new ArrayList<>();
+    private ArrayAdapter<String> userListAdapter;
+
     FirebaseRecyclerOptions<PantryListObject> options;
     FirebaseRecyclerAdapter<PantryListObject, PantryAdapter> adapter;
     @Override
@@ -74,6 +91,7 @@ public class MyKitchenActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(Constants.DATABASE_REFERENCE);
         user_items = databaseReference.child(Constants.PANTRY);
+        shopping_list = databaseReference.child(Constants.SHOPPING_LIST);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -83,6 +101,9 @@ public class MyKitchenActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("My Kitchen");
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        no_pantry_text = (TextView) findViewById(R.id.no_item_text);
 
         fabSpeedDial = (FabSpeedDial) findViewById(R.id.fabSpeed);
         fabSpeedDial.setMenuListener(new FabSpeedDial.MenuListener() {
@@ -122,9 +143,29 @@ public class MyKitchenActivity extends AppCompatActivity {
     }
 
     private void displayMyPantryItems() {
+
+        Query query = user_items.child(user.getUid());
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    progressBar.setVisibility(View.GONE);
+                } else {
+                    no_pantry_text.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         options =
                 new FirebaseRecyclerOptions.Builder<PantryListObject>()
-                .setQuery(user_items.child(user.getUid()), PantryListObject.class)
+                .setQuery(query, PantryListObject.class)
                 .build();
 
         adapter = new FirebaseRecyclerAdapter<PantryListObject, PantryAdapter>(options) {
@@ -141,6 +182,15 @@ public class MyKitchenActivity extends AppCompatActivity {
                         ContextCompat.getColor(MyKitchenActivity.this, android.R.color.holo_red_light),
                         ContextCompat.getColor(MyKitchenActivity.this, android.R.color.holo_green_light)
                 };
+
+                float percentage = (Float.parseFloat(model.getQuantity_threshold()) / Float.parseFloat(model.getQuantity())) * 100;
+                holder.txtReadingPercentage.setText((int)percentage + "%");
+
+                if (percentage > 90)
+                    //holder.progressBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+                    holder.progressBar.setProgressTintList(ColorStateList.valueOf(Color.RED));
+
+                holder.progressBar.setProgress((int)percentage);
                 holder.txtItemName.setText(model.getItemName());
                 holder.txtCategory.setText(model.getCategory());
 
@@ -222,6 +272,132 @@ public class MyKitchenActivity extends AppCompatActivity {
                                 Intent intent = new Intent(MyKitchenActivity.this, AddNewItemActivity.class);
                                 intent.putExtra(Constants.EDIT_ITEM_KEY, selectedKey);
                                 startActivity(intent);
+                            }
+                        });
+                        ((ImageButton)dialog.findViewById(R.id.btn_add_cat)).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                final Dialog add_to_list_dialog = new Dialog(MyKitchenActivity.this);
+                                add_to_list_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+                                add_to_list_dialog.setContentView(R.layout.add_to_list);
+                                add_to_list_dialog.setCancelable(true);
+                                add_to_list_dialog.setCanceledOnTouchOutside(true);
+
+                                WindowManager.LayoutParams lps = new WindowManager.LayoutParams();
+                                lps.copyFrom(add_to_list_dialog.getWindow().getAttributes());
+                                lps.width = WindowManager.LayoutParams.WRAP_CONTENT;
+                                lps.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                                ((TextView) add_to_list_dialog.findViewById(R.id.item_units)).setText(model.getUnit());
+                                ((TextView) add_to_list_dialog.findViewById(R.id.txt_item_name_add)).setText(model.getItemName());
+
+                                Spinner my_list_spinner = (Spinner)add_to_list_dialog.findViewById(R.id.my_list);
+                                EditText shopping_list_name = (EditText)add_to_list_dialog.findViewById(R.id.shop_list_ref);
+                                EditText qty_to_buy = (EditText)add_to_list_dialog.findViewById(R.id.edt_qty_cart);
+
+                                //userListArray.clear();
+                               shopping_list.child(user.getUid())
+                                       .addListenerForSingleValueEvent(new ValueEventListener() {
+                                           @Override
+                                           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                               if (dataSnapshot.exists()) {
+                                                   for (DataSnapshot myListItems : dataSnapshot.getChildren()){
+                                                       Log.e("GIS", "onDataChange: "+ myListItems.getKey() );
+                                                       String listItems = myListItems.getKey();
+                                                       userListArray.add(listItems);
+                                                   }
+                                                   Log.e("GIS", "List Size: "+ userListArray.size() );
+                                                   userListAdapter = new ArrayAdapter<String>(
+                                                           getApplicationContext(), R.layout.network_spinner_layout, R.id.network_spn, userListArray);
+
+                                                   my_list_spinner.setAdapter(userListAdapter);
+                                               }
+
+
+                                           }
+
+                                           @Override
+                                           public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                           }
+                                       });
+
+                               my_list_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                   @Override
+                                   public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                       shopping_list_name.setText(userListArray.get(position));
+                                   }
+
+                                   @Override
+                                   public void onNothingSelected(AdapterView<?> parent) {
+
+                                   }
+                               });
+
+
+                                ((ImageButton)add_to_list_dialog.findViewById(R.id.btn_cancel_cart)).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        add_to_list_dialog.dismiss();
+                                    }
+                                });
+
+                                ((ImageButton)add_to_list_dialog.findViewById(R.id.btn_add_cart)).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        String qty_to_add = qty_to_buy.getText().toString();
+                                        String shop_ref = shopping_list_name.getText().toString();
+                                        //shop_ref = shop_ref.replaceAll(" ", "-").toLowerCase();
+                                        shop_ref = shop_ref.replaceAll("\\s+", "_").toLowerCase();
+                                        if (TextUtils.isEmpty(qty_to_add)) {
+                                            qty_to_buy.setError("This field is required");
+                                            qty_to_buy.requestFocus();
+                                            return;
+                                        }
+                                        if (qty_to_add.equals("0")) {
+                                            qty_to_buy.setError("Enter a value greater than zero");
+                                            qty_to_buy.requestFocus();
+                                            return;
+                                        }
+                                        if (TextUtils.isEmpty(shop_ref)) {
+                                            shopping_list_name.setError("This field is required");
+                                            shopping_list_name.requestFocus();
+                                            return;
+                                        }
+
+                                        PantryListObject listObject = new PantryListObject();
+
+                                        listObject.setUnit_price(model.getUnit());
+                                        listObject.setItemName(model.getItemName());
+                                        listObject.setQuantity(qty_to_add);
+                                        listObject.setUnit_price(model.getUnit_price());
+
+                                        shopping_list.child(user.getUid())
+                                                .child(shop_ref)
+                                                .push()
+                                                .setValue(listObject)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(MyKitchenActivity.this, "Added to shopping list ", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(MyKitchenActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                                        //Toast.makeText(MyKitchenActivity.this, "Clicked: "+ selectedKey, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                                add_to_list_dialog.show();
+                                add_to_list_dialog.getWindow().setAttributes(lps);
+
                             }
                         });
                         dialog.show();

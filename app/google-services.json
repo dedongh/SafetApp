@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "246392268885-9l7l3ruqubi0ml25fjgus92blm937obq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.engineerskasa.safetapp",
+            "certificate_hash": "cceeb143defdc8cd6b9691293682e887787e9d78"
+          }
+        },
+        {
           "client_id": "246392268885-tnv6mnjat9r1488ss4ic09ahlidm90d8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

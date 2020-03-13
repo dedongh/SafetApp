@@ -23,11 +23,26 @@
             app:titleTextColor="@color/white"
             android:layout_marginBottom="10dp"/>
 
+        <TextView
+            android:id="@+id/no_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Items in your pantry will appear here"
+            android:textColor="@color/colorBookTitle"
+            android:visibility="gone"
+            android:layout_gravity="center"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pantry_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
     <io.github.yavski.fabspeeddial.FabSpeedDial
         android:id="@+id/fabSpeed"

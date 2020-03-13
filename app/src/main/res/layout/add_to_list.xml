@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/txt_item_name_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item Name"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:textColor="@color/colorBookTitle"
+            />
+
+        <EditText
+            android:id="@+id/shop_list_ref"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Shopping List Name"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantity to restock: "
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:textSize="15sp"
+                android:textColor="@color/colorHeading"
+                />
+            <EditText
+                android:id="@+id/edt_qty_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Qty"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:textSize="15sp"
+                android:inputType="number"
+                android:textColor="@color/colorHeading"
+                />
+            <TextView
+                android:id="@+id/item_units"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="units"
+                android:layout_marginTop="10dp"
+                android:textSize="15sp"
+                android:textColor="@color/colorHeading"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="or add to an already existing list"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:textColor="@color/colorHeading"/>
+
+        <Spinner
+            android:id="@+id/my_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            />
+
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/btn_add_cart"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_check_circle"
+                android:background="@color/transparent"
+                android:layout_margin="10dp"
+                android:tint="@color/colorBookTitle"/>
+            <ImageButton
+                android:id="@+id/btn_cancel_cart"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_close_black"
+                android:background="@color/transparent"
+                android:layout_margin="10dp"
+                android:tint="@color/colorBookTitle"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>

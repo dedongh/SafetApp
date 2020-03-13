@@ -151,7 +151,6 @@
                 android:layout_height="5dp"
                 android:layout_weight="1"
                 android:max="100"
-                android:progress="0"
                 android:progressDrawable="@drawable/progress_drawable" />
 
 

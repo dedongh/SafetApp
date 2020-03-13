@@ -61,11 +61,10 @@
                 android:id="@+id/edt_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone Number"
+                android:hint="542 444 527"
                 android:inputType="phone"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="542 444 527"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:textColor="@color/grey_90"
                 android:textStyle="bold" >
