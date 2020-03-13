@@ -145,7 +145,8 @@ public class MyKitchenActivity extends AppCompatActivity {
         int spanCount = 3; // 3 columns
         int spacing = 15; // 50px
         boolean includeEdge = true;
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));        displayMyPantryItems();
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+        displayMyPantryItems();
     }
 
     private void move_item_to_list() {

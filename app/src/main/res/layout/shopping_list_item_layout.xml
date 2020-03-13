@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+        <TextView
+            android:id="@+id/txt_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item Name"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:textColor="@color/colorBookTitle"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantity: "
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:textSize="15sp"
+                android:textColor="@color/colorHeading"
+                />
+            <EditText
+                android:id="@+id/shp_qty_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Qty"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:textSize="15sp"
+                android:inputType="number"
+                android:textColor="@color/colorHeading"
+                />
+            <TextView
+                android:id="@+id/spn_units"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="units"
+                android:layout_marginTop="10dp"
+                android:textSize="15sp"
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/colorHeading"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price (GHS):"
+                android:layout_marginTop="10dp"
+                android:textSize="15sp"
+                android:textColor="@color/colorHeading"
+                />
+            <EditText
+                android:id="@+id/edt_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="1.00"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:textSize="15sp"
+                android:inputType="number"
+                android:textColor="@color/colorHeading"
+                />
+            <ImageButton
+                android:id="@+id/btn_save_cart"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_check_circle"
+                android:background="@color/transparent"
+                android:layout_marginTop="10dp"
+                android:tint="@color/colorBookTitle"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
