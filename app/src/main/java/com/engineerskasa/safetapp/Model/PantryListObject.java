@@ -3,7 +3,7 @@ package com.engineerskasa.safetapp.Model;
 public class PantryListObject {
     private String itemName, category, quantity, days_left_to_expire, expiration_date,
     mode_of_preservation, description, quantity_threshold, unit_price, item_image,
-    unit, exp_notice;
+    unit, exp_notice, list_name;
 
     public PantryListObject() {
     }
@@ -23,6 +23,14 @@ public class PantryListObject {
         this.item_image = item_image;
         this.unit = unit;
         this.exp_notice = exp_notice;
+    }
+
+    public String getList_name() {
+        return list_name;
+    }
+
+    public void setList_name(String list_name) {
+        this.list_name = list_name;
     }
 
     public String getItemName() {

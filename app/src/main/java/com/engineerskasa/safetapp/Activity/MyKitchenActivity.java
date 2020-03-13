@@ -53,7 +53,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 import io.github.yavski.fabspeeddial.FabSpeedDial;
@@ -123,6 +126,9 @@ public class MyKitchenActivity extends AppCompatActivity {
                     startActivity(new Intent(MyKitchenActivity.this, ShoppingListActivity.class));
                 if (menuItem.getItemId() == R.id.action_shops)
                     startActivity(new Intent(MyKitchenActivity.this, AvailableShopsActivity.class));
+                if (menuItem.getItemId() == R.id.action_autofill_list){
+                    move_item_to_list();
+                }
                 return true;
             }
 
@@ -140,6 +146,44 @@ public class MyKitchenActivity extends AppCompatActivity {
         int spacing = 15; // 50px
         boolean includeEdge = true;
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));        displayMyPantryItems();
+    }
+
+    private void move_item_to_list() {
+        user_items.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot shopper : dataSnapshot.getChildren()) {
+                        String quantity = shopper.child("quantity").getValue(String.class);
+                        String threshold = shopper.child("quantity_threshold").getValue(String.class);
+                        if (quantity.equals(threshold) || Integer.parseInt(quantity) < Integer.parseInt(threshold)) {
+                            Log.e("DFGS", "Name: " + shopper.child("itemName").getValue(String.class));
+
+                            Date now = new Date();
+                            int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(now));
+
+                            PantryListObject listObject = new PantryListObject();
+
+                            listObject.setUnit_price(shopper.child("unit_price").getValue(String.class));
+                            listObject.setItemName(shopper.child("itemName").getValue(String.class));
+                            listObject.setQuantity(shopper.child("quantity").getValue(String.class));
+                            listObject.setUnit_price(shopper.child("unit_price").getValue(String.class));
+                            shopping_list.child(user.getUid())
+                                    .child("auto_generated"+id)
+                                    .push().setValue(listObject);
+                        }
+                        //Log.e("DFGS", "onDataChange: " + quantity + " threshold: " + threshold);
+                    }
+                } else {
+                    Toast.makeText(MyKitchenActivity.this, "You have nothing in your pantry about to finish", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void displayMyPantryItems() {
@@ -350,7 +394,6 @@ public class MyKitchenActivity extends AppCompatActivity {
 
                                         String qty_to_add = qty_to_buy.getText().toString();
                                         String shop_ref = shopping_list_name.getText().toString();
-                                        //shop_ref = shop_ref.replaceAll(" ", "-").toLowerCase();
                                         shop_ref = shop_ref.replaceAll("\\s+", "_").toLowerCase();
                                         if (TextUtils.isEmpty(qty_to_add)) {
                                             qty_to_buy.setError("This field is required");
@@ -370,7 +413,7 @@ public class MyKitchenActivity extends AppCompatActivity {
 
                                         PantryListObject listObject = new PantryListObject();
 
-                                        listObject.setUnit_price(model.getUnit());
+                                        listObject.setUnit(model.getUnit());
                                         listObject.setItemName(model.getItemName());
                                         listObject.setQuantity(qty_to_add);
                                         listObject.setUnit_price(model.getUnit_price());
