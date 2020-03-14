@@ -1,12 +1,14 @@
 package com.engineerskasa.safetapp.Activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,14 +16,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alespero.expandablecardview.ExpandableCardView;
+import com.engineerskasa.safetapp.Adapter.ShopperRecyclerAdapter;
 import com.engineerskasa.safetapp.Adapter.ShoppingListAdapter;
-import com.engineerskasa.safetapp.Interfaces.ItemClickListener;
 import com.engineerskasa.safetapp.Model.PantryListObject;
 import com.engineerskasa.safetapp.R;
 import com.engineerskasa.safetapp.Utility.Constants;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,8 +35,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class ShoppingListActivity extends AppCompatActivity {
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference, user_items, shopping_list;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference, user_items, shopping_list;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -104,58 +107,72 @@ public class ShoppingListActivity extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<PantryListObject, ShoppingListAdapter>(options) {
             @Override
             protected void onBindViewHolder(@NonNull ShoppingListAdapter holder, int position, @NonNull PantryListObject model) {
-                holder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-                        //selectedKey = getSnapshots().getSnapshot(position).getKey();
-                        //Log.e("GHJK", "onBindViewHolder: "+ getSnapshots().getSnapshot(position).getKey() );
-
-
-                    }
-
-                    @Override
-                    public void onLongClick(View view, int position) {
-
-                    }
-                });
-                //selectedKey = getSnapshots().getSnapshot(position).getKey();
-
-                holder.shop_list_name.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
-                    @Override
-                    public void onExpandChanged(View v, boolean isExpanded) {
-                        selectedKey = getSnapshots().getSnapshot(position).getKey();
-                        //Toast.makeText(ShoppingListActivity.this, ""+selectedKey, Toast.LENGTH_SHORT).show();
-                        if (isExpanded) {
-                            shopping_list.child(user.getUid())
-                                    .child(selectedKey)
-                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.exists()) {
-
-                                                for (DataSnapshot list_items : dataSnapshot.getChildren()) {
-                                                   /* Log.e("GHJK", "onDataChange: "+ selectedKey);
-                                                    Log.e("GHJK", "Value: "+ list_items.child("itemName").getValue(String.class));
-                                                    holder.txtItemName.setText(list_items.child("itemName").getValue(String.class));*/
-                                                   //holder.shop_list_name.set
-                                                }
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-                        }
-
-
-                    }
-                });
-
 
                 holder.shop_list_name.setTitle(getSnapshots().getSnapshot(position).getKey());
-                //Log.e("GHJK", "onBindViewHolder: "+ selectedKey );
+
+                holder.my_shop_recycler.setLayoutManager(new LinearLayoutManager(ShoppingListActivity.this));
+
+
+               selectedKey = getSnapshots().getSnapshot(position).getKey();
+               holder.item_layout.setTag(selectedKey);
+
+                FirebaseRecyclerOptions<PantryListObject> pantryOptions = new FirebaseRecyclerOptions.Builder<PantryListObject>()
+                        .setQuery(shopping_list.child(user.getUid())
+                                        .child(selectedKey),
+                                PantryListObject.class)
+                        .build();
+
+                FirebaseRecyclerAdapter<PantryListObject, ShopperRecyclerAdapter> shopperAdapter
+                        = new FirebaseRecyclerAdapter<PantryListObject, ShopperRecyclerAdapter>(pantryOptions) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull ShopperRecyclerAdapter pantryHolder, int pantryPosition, @NonNull PantryListObject pantryModel) {
+
+                        String update_selected = getSnapshots().getSnapshot(pantryPosition).getKey();
+                        pantryHolder.txtItemName.setText(pantryModel.getItemName());
+                        pantryHolder.edt_quantity.setText(pantryModel.getQuantity());
+                        pantryHolder.edt_price.setText(pantryModel.getUnit_price());
+                        pantryHolder.txtUnits.setText(pantryModel.getUnit());
+
+                        pantryHolder.save_to_cart.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                PantryListObject pantryListObject = new PantryListObject();
+                                pantryListObject.setItemName(pantryHolder.txtItemName.getText().toString());
+                                pantryListObject.setUnit(pantryModel.getUnit());
+                                pantryListObject.setUnit_price(pantryHolder.edt_price.getText().toString());
+                                pantryListObject.setQuantity(pantryHolder.edt_quantity.getText().toString());
+
+                                Log.e("mnjk", "SelectedKey: "+ selectedKey+
+                                        " childKey: "+ update_selected + " jk "+ holder.item_layout.getTag());
+                                shopping_list.child(user.getUid())
+                                        .child((String) holder.item_layout.getTag())
+                                        .child(update_selected)
+                                        .setValue(pantryListObject)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(ShoppingListActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(ShoppingListActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                //Toast.makeText(ShoppingListActivity.this, ""+ update_selected, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @NonNull
+                    @Override
+                    public ShopperRecyclerAdapter onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(getBaseContext()).inflate(R.layout.shopping_list_item_layout, parent, false);
+                        return new ShopperRecyclerAdapter(view);
+                    }
+                };
+                shopperAdapter.startListening();
+                holder.my_shop_recycler.setAdapter(shopperAdapter);
             }
 
             @NonNull
