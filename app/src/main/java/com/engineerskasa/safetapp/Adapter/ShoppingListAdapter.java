@@ -48,5 +48,6 @@ public class ShoppingListAdapter extends RecyclerView.ViewHolder {
                 return false;
             }
         });
+
     }
 }

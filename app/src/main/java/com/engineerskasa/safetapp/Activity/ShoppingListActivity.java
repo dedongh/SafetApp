@@ -14,7 +14,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alespero.expandablecardview.ExpandableCardView;
 import com.engineerskasa.safetapp.Adapter.ShoppingListAdapter;
+import com.engineerskasa.safetapp.Interfaces.ItemClickListener;
 import com.engineerskasa.safetapp.Model.PantryListObject;
 import com.engineerskasa.safetapp.R;
 import com.engineerskasa.safetapp.Utility.Constants;
@@ -40,6 +42,7 @@ public class ShoppingListActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private TextView no_pantry_text;
+    private String selectedKey;
 
     FirebaseRecyclerOptions<PantryListObject> options;
     FirebaseRecyclerAdapter<PantryListObject, ShoppingListAdapter> adapter;
@@ -101,7 +104,58 @@ public class ShoppingListActivity extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<PantryListObject, ShoppingListAdapter>(options) {
             @Override
             protected void onBindViewHolder(@NonNull ShoppingListAdapter holder, int position, @NonNull PantryListObject model) {
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        //selectedKey = getSnapshots().getSnapshot(position).getKey();
+                        //Log.e("GHJK", "onBindViewHolder: "+ getSnapshots().getSnapshot(position).getKey() );
 
+
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                });
+                //selectedKey = getSnapshots().getSnapshot(position).getKey();
+
+                holder.shop_list_name.setOnExpandedListener(new ExpandableCardView.OnExpandedListener() {
+                    @Override
+                    public void onExpandChanged(View v, boolean isExpanded) {
+                        selectedKey = getSnapshots().getSnapshot(position).getKey();
+                        //Toast.makeText(ShoppingListActivity.this, ""+selectedKey, Toast.LENGTH_SHORT).show();
+                        if (isExpanded) {
+                            shopping_list.child(user.getUid())
+                                    .child(selectedKey)
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+
+                                                for (DataSnapshot list_items : dataSnapshot.getChildren()) {
+                                                   /* Log.e("GHJK", "onDataChange: "+ selectedKey);
+                                                    Log.e("GHJK", "Value: "+ list_items.child("itemName").getValue(String.class));
+                                                    holder.txtItemName.setText(list_items.child("itemName").getValue(String.class));*/
+                                                   //holder.shop_list_name.set
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                        }
+
+
+                    }
+                });
+
+
+                holder.shop_list_name.setTitle(getSnapshots().getSnapshot(position).getKey());
+                //Log.e("GHJK", "onBindViewHolder: "+ selectedKey );
             }
 
             @NonNull

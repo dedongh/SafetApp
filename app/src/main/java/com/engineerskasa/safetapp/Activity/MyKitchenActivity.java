@@ -341,7 +341,6 @@ public class MyKitchenActivity extends AppCompatActivity {
                                 EditText shopping_list_name = (EditText)add_to_list_dialog.findViewById(R.id.shop_list_ref);
                                 EditText qty_to_buy = (EditText)add_to_list_dialog.findViewById(R.id.edt_qty_cart);
 
-                                //userListArray.clear();
                                shopping_list.child(user.getUid())
                                        .addListenerForSingleValueEvent(new ValueEventListener() {
                                            @Override
