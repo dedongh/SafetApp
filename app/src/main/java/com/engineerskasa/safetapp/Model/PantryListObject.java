@@ -1,14 +1,16 @@
 package com.engineerskasa.safetapp.Model;
 
 public class PantryListObject {
-    private String itemName, category, quantity, days_left_to_expire, expiration_date,
+    private String itemName, category, quantity, expiration_date,
     mode_of_preservation, description, quantity_threshold, unit_price, item_image,
     unit, exp_notice, list_name;
+
+    private Long days_left_to_expire;
 
     public PantryListObject() {
     }
 
-    public PantryListObject(String itemName, String category, String quantity, String days_left_to_expire,
+    public PantryListObject(String itemName, String category, String quantity, Long days_left_to_expire,
                             String expiration_date, String mode_of_preservation, String description,
                             String quantity_threshold, String unit_price, String item_image, String unit, String exp_notice) {
         this.itemName = itemName;
@@ -57,11 +59,11 @@ public class PantryListObject {
         this.quantity = quantity;
     }
 
-    public String getDays_left_to_expire() {
+    public Long getDays_left_to_expire() {
         return days_left_to_expire;
     }
 
-    public void setDays_left_to_expire(String days_left_to_expire) {
+    public void setDays_left_to_expire(Long days_left_to_expire) {
         this.days_left_to_expire = days_left_to_expire;
     }
 

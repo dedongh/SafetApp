@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.engineerskasa.safetapp.Adapter.PantryAdapter;
+import com.engineerskasa.safetapp.Interfaces.ItemClickListener;
 import com.engineerskasa.safetapp.Model.PantryListObject;
 import com.engineerskasa.safetapp.R;
 import com.engineerskasa.safetapp.Utility.Constants;
@@ -97,11 +99,15 @@ public class AboutToExpireActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
 
         display_expired_items();
+
+
     }
 
     private void display_expired_items() {
         Query query = user_items.child(user.getUid())
-                .child("days_left_to_expire").endAt(10);
+                .orderByChild("days_left_to_expire")
+                //.startAt(7)
+                .endAt(7);
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -110,6 +116,7 @@ public class AboutToExpireActivity extends AppCompatActivity {
                     Log.e("GHJF", "onDataChange: "+ dataSnapshot.getChildrenCount() );
                     progressBar.setVisibility(View.GONE);
                 } else {
+                    Log.e("GHJF", "onDataChange: "+ dataSnapshot.getChildrenCount() );
                     no_pantry_text.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                 }
@@ -161,6 +168,18 @@ public class AboutToExpireActivity extends AppCompatActivity {
                 mInitialsBackground = (GradientDrawable)holder.initialsTextView.getBackground();
                 holder.initialsTextView.setText(holder.txtItemName.getText().toString().toUpperCase().substring(0,1));
                 mInitialsBackground.setColor(colors[new Random().nextInt(colors.length)]);
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        Toast.makeText(AboutToExpireActivity.this, +model.getDays_left_to_expire()+" Days left to expire", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                });
             }
 
             @NonNull

@@ -90,8 +90,9 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
     Spinner spn_category, spn_units;
     Button btn_save, btn_update;
     CheckBox exp_notice;
-    private String category_name, units_selected, exp_date, selected_date, days_to_expire,
+    private String category_name, units_selected, exp_date, selected_date,
             item_name, description, minimum_units, quantity, unit_price, notify_me, mode_of_preservation;
+    private Long days_to_expire;
 
     private LinearLayout expLayout;
 
@@ -208,7 +209,7 @@ public class AddNewItemActivity extends AppCompatActivity implements View.OnClic
 
                                     Date userDate = simpleDateFormat.parse(selected_date);
 
-                                   days_to_expire = Tools.printDifference(currentDate, userDate);
+                                   days_to_expire = Long.valueOf(Tools.printDifference(currentDate, userDate));
                                     Log.e("TAG", "today: "+ currentDate +
                                             " userDate: "+ userDate + "" +
                                             " selected date: "+ selected_date +
