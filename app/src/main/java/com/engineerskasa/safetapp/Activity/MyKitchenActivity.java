@@ -126,6 +126,8 @@ public class MyKitchenActivity extends AppCompatActivity {
                     startActivity(new Intent(MyKitchenActivity.this, ShoppingListActivity.class));
                 if (menuItem.getItemId() == R.id.action_shops)
                     startActivity(new Intent(MyKitchenActivity.this, AvailableShopsActivity.class));
+                if (menuItem.getItemId() == R.id.action_expire_list)
+                    startActivity(new Intent(MyKitchenActivity.this, AboutToExpireActivity.class));
                 if (menuItem.getItemId() == R.id.action_autofill_list){
                     move_item_to_list();
                 }
@@ -500,5 +502,11 @@ public class MyKitchenActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        adapter.stopListening();
     }
 }

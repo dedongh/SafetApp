@@ -1,16 +1,15 @@
 package com.engineerskasa.safetapp.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.engineerskasa.safetapp.R;
 import com.engineerskasa.safetapp.Utility.Tools;
@@ -71,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(new Intent(MainActivity.this, ShoppingListActivity.class));
                 if (menuItem.getItemId() == R.id.action_shops)
                     startActivity(new Intent(MainActivity.this, AvailableShopsActivity.class));
+                if (menuItem.getItemId() == R.id.action_expire_list)
+                    startActivity(new Intent(MainActivity.this, AboutToExpireActivity.class));
                 return true;
             }
 
