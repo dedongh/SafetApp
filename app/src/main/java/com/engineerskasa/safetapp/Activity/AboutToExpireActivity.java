@@ -81,7 +81,7 @@ public class AboutToExpireActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.setNavigationIcon(R.drawable.ic_close_black);
+        toolbar.setNavigationIcon(R.drawable.ic_close_black);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("About to expire");

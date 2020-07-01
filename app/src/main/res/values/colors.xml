@@ -27,8 +27,12 @@
 
     <color name="gray_text">#B6B6B6</color>
     <color name="grey_5">#f2f2f2</color>
+    <color name="grey_10">#e6e6e6</color>
+    <color name="grey_40">#999999</color>
 
     <color name="overlay_dark_30">#4D000000</color>
     <color name="overlay_dark_40">#66000000</color>
     <color name="overlay_dark_10">#1A000000</color>
+    <color name="overlay_dark_50">#80000000</color>
+    <color name="overlay_light_10">#1AFFFFFF</color>
 </resources>
